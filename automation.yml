@@ -1,0 +1,75 @@
+pipeline:
+  flavour: mavenjavaalp-8
+  project_manifest_git_ssh_url: 'git@scm.code.telecomitalia.it:gup/gup.meta.git'
+  delivery_git_ssh_url: 'git@scm.code.telecomitalia.it:gup/bl-visualizza-richiesta-domfisso/delivery.git'
+  service_name: bl-visualizza-richiesta-domfisso
+build:
+  push:
+    mvn: |
+     clean install
+     dependency:copy-dependencies -DouptutDirectory=target/dependency
+  tag:
+    mvn: |
+     versions:set -DnewVersion=$TAG
+     clean install
+     dependency:copy-dependencies -DouptutDirectory=target/dependency
+unit_test:
+  skip: true
+  push:
+    mvn: test
+  tag:
+    mvn: test
+quality:
+  skip: true
+  sonarqube:
+    skip: false
+    properties: |
+      sonar.sources=src/main/java
+      sonar.junit.reportsPath=target/surefire-reports
+      sonar.jacoco.reportPaths=target/coverage-reports/jacoco-unit.exec
+      sonar.java.binaries=target/classes
+      sonar.java.libraries=target/*.jar
+#      sonar.cpd.exclusions=src/main/java/it/tim/mobileaps/apiunica/model/**
+#      sonar.exclusions=src/main/java/it/tim/mobileaps/apiunica/model/**,src/main/java/it/tim/mobileaps/apiunica/controller/**
+    active_gate: true
+  check_style:
+    skip: true
+    source_code: ./src
+    active_gate: false
+
+security:
+    skip: false
+    srsca:
+      skip: true
+      configuration:
+        scan:
+          scan_path: "**/target/dependency/*"
+          other_arguments: " --exclude **/target/dependency/activemq-all*.*"
+    srsta:
+      skip: false
+      configuration:
+        scan:
+          scan_path: "./src/main/java"
+          fp_security_file: "./falsi_positivi.csv"
+        publisher:
+          pattern: "src/main/java/securityreviewer-result.xml"
+          fp_security_file: "./falsi_positivi.csv"
+
+
+delivery:
+  artifacts:
+    skip: false
+    tag:
+      mvn: deploy -DaltReleaseDeploymentRepository=nexus::default::${NEXUS_LIB_URL}
+      assets: $(mvn -s mvn-settings.xml -q exec:exec -Dexec.executable='echo' -Dexec.args=${NEXUS_LIB_URL}':${project.groupId}:${project.artifactId}:${project.version}')
+
+  image:
+    skip: false
+    artifact:
+      source: target/${REPOSITORY_NAME}-${TAG}.jar
+      start: target/${REPOSITORY_NAME}-${TAG}.jar
+  mailing_lists:
+    - versions: alfa,beta
+      mailto: alessandro.mamone@telecomitalia.it
+    - versions: release
+      mailto: alessandro.mamone@telecomitalia.it

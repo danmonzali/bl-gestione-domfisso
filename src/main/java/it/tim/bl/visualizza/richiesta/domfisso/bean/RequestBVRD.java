@@ -1,0 +1,19 @@
+package it.tim.bl.visualizza.richiesta.domfisso.bean;
+
+public class RequestBVRD {
+
+	private VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso visualizzazioneRichiestaAttivazioneDomiciliazioneFisso;
+
+	public VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso getVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso() {
+		return visualizzazioneRichiestaAttivazioneDomiciliazioneFisso;
+	}
+
+	public void setVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso(
+			VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso visualizzazioneRichiestaAttivazioneDomiciliazioneFisso) {
+		this.visualizzazioneRichiestaAttivazioneDomiciliazioneFisso = visualizzazioneRichiestaAttivazioneDomiciliazioneFisso;
+	}
+
+
+	
+	
+}

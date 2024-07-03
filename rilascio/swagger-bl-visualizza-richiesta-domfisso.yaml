@@ -1,0 +1,212 @@
+openapi: 3.0.1
+info:
+  title: Api Documentation Bl visualizza richiesta domfisso
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+    description: Generated server url
+paths:
+  /bl/visualizza-richiesta-domfisso:
+    post:
+      tags:
+        - controller
+      summary: POST BL Visualizza richiesta dom fisso
+      description: verifica lo stato attuale di una domiciliazione bancaria su mandato generico SDD della bolletta del telefono fisso di un cliente TIM
+      operationId: blVisualizzaRichiestaDomFisso
+      parameters:
+        - name: sourceSystem
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: channel
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: interactionDate-Date
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: interactionDate-Time
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: sessionID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: businessID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: transactionID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: messageID
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: resubmitted
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: APIGW_requestID
+          in: header
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestBVRD'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseBVRD'
+        '400':
+          description: Bad request
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BVRDErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BVRDErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BVRDErrorResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BVRDErrorResponse'
+        '504':
+          description: GateWay TimeOut
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BVRDErrorResponse'
+  /probe:
+    get:
+      tags:
+        - controller
+      operationId: probe
+      responses:
+        '200':
+          description: OK
+  /getLocalTime:
+    get:
+      tags:
+        - controller
+      operationId: getLocalTime
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+components:
+  schemas:
+    RequestBVRD:
+      type: object
+      properties:
+        visualizzazioneRichiestaAttivazioneDomiciliazioneFisso:
+          $ref: '#/components/schemas/VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso'
+    UtenzaFissa:
+      type: object
+      properties:
+        prefisso:
+          type: string
+        numero:
+          type: string
+    VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso:
+      type: object
+      properties:
+        tipoOperazione:
+          type: string
+        subsys:
+          type: string
+        dataOraOp:
+          type: string
+          format: date-time
+        cf:
+          type: string
+        utenzaFissa:
+          $ref: '#/components/schemas/UtenzaFissa'
+    BVRDErrorResponse:
+      required:
+        - code
+        - errorSourceSystem
+        - message
+        - timestamp
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        errorSourceSystem:
+          type: string
+        moreInfo:
+          type: string
+        userMessage:
+          type: string
+    DatiRichiesta:
+      type: object
+      properties:
+        stato:
+          type: string
+        dataRichiesta:
+          type: string
+        getbID:
+          type: string
+        utenzaFissa:
+          $ref: '#/components/schemas/UtenzaFissa'
+    ResponseBVRD:
+      type: object
+      properties:
+        tipoOperazione:
+          type: string
+        subsys:
+          type: string
+        dataOraOp:
+          type: string
+        esito:
+          type: string
+        datiRichiesta:
+          $ref: '#/components/schemas/DatiRichiesta'
