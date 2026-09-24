@@ -1,4 +1,4 @@
-package it.tim.bl.visualizza.richiesta.domfisso.repo;
+package it.tim.bl.gestione.domfisso.repo;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,9 +9,9 @@ import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import it.tim.bl.visualizza.richiesta.domfisso.controller.Controller;
-import it.tim.bl.visualizza.richiesta.domfisso.exception.BVRDFException;
-import it.tim.bl.visualizzazione.richiesta.domfisso.dto.DomiciliazioneFissoDTO;
+import it.tim.bl.gestione.domfisso.controller.Controller;
+import it.tim.bl.gestione.domfisso.exception.BVRDFException;
+import it.tim.bl.gestione.domfisso.dto.DomiciliazioneFissoDTO;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;

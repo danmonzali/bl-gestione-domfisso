@@ -1,4 +1,4 @@
-package it.tim.bl.visualizza.richiesta.domfisso.exception;
+package it.tim.bl.gestione.domfisso.exception;
 
 import java.time.LocalDateTime;
 

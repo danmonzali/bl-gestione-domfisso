@@ -1,4 +1,4 @@
-package it.tim.bl.visualizza.richiesta.domfisso.controller;
+package it.tim.bl.gestione.domfisso.controller;
 
 import java.util.Date;
 
@@ -23,11 +23,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import it.tim.bl.visualizza.richiesta.domfisso.bean.RequestBVRD;
-import it.tim.bl.visualizza.richiesta.domfisso.bean.ResponseBVRD;
-import it.tim.bl.visualizza.richiesta.domfisso.exception.BVRDErrorResponse;
-import it.tim.bl.visualizza.richiesta.domfisso.exception.BVRDFException;
-import it.tim.bl.visualizza.richiesta.domfisso.service.BVRService;
+import it.tim.bl.gestione.domfisso.bean.RequestBVRD;
+import it.tim.bl.gestione.domfisso.bean.ResponseBVRD;
+import it.tim.bl.gestione.domfisso.exception.BVRDErrorResponse;
+import it.tim.bl.gestione.domfisso.exception.BVRDFException;
+import it.tim.bl.gestione.domfisso.service.BVRService;
 import it.tim.gup.common.bean.GupRequestObject;
 import it.tim.gup.common.controller.GupController;
 import it.tim.gup.common.controller.RestHeader;

@@ -1,4 +1,4 @@
-package it.tim.bl.visualizza.richiesta.domfisso.config;
+package it.tim.bl.gestione.domfisso.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
