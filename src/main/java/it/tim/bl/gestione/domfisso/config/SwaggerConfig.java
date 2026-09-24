@@ -14,7 +14,7 @@ public class SwaggerConfig {
 	public OpenAPI customOpenAPI() {
 		return new OpenAPI()
 				.components(new Components())
-				.info(new Info().title("Api Documentation Bl visualizza richiesta domfisso").version("1.0.0"));
+				.info(new Info().title("Api Documentation Bl gestione domfisso").version("1.0.0"));
 	}
 
 }
