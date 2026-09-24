@@ -58,7 +58,7 @@ public class Controller extends GupController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(array = @ArraySchema(schema = @Schema(implementation = BVRDErrorResponse.class))) }) })
 	@CrossOrigin(origins = "*")
-	@PostMapping(value = "/bl/visualizza-richiesta")
+	@PostMapping(value = "/visualizza-richiesta")
 	//per stampare la request utilizza GupRequestObject
 	public ResponseEntity<VisualizzaResponseDto> blVisualizzaRichiestaDomFisso(@RequestBody(required = true) VisualizzaRequestDto request,
 			@RequestHeader(name = "sourceSystem", required = true) String sourceSystem,

@@ -58,14 +58,10 @@ public class BVRService {
 			responseBody.setTipoOperazione(tipoOperazione);
 			responseBody.setSubsys("NBIP");
 			responseBody.setDataOraOp(LocalDateTime.now().toString());
-			//01 : richiesta OK
-			//02: errore nei controlli formali
-			//03: nessun dato trovato
-			//04: errore generico
 
 			if (!resultQuery.isEmpty()) {
 				responseBody.setEsito(ESITO_OK);
-				responseBody.setDatiRichiesta(mapDatiRichiesta(resultQuery.get(0)));
+				responseBody.setDatiRichiesta(mapDatiRichiesta(resultQuery.getFirst()));
 			} else {
 				responseBody.setEsito(ESITO_NESSUN_DATO);
 			}
@@ -84,15 +80,14 @@ public class BVRService {
 
 	private List<DomiciliazioneFisso> cercaDomiciliazioni(
 			VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso richiesta, String tipoOperazione) {
-		switch (tipoOperazione) {
-		case TIPO_OPERAZIONE_01:
-			return richiestaAttDomFissoRepository.findDomiciliazioniByCodiceFiscale(richiesta.getCf());
-		case TIPO_OPERAZIONE_02:
-			return domiciliazioneFissoRepository.findByPrefissoAndNumero(richiesta.getUtenzaFissa().getPrefisso(),
-					richiesta.getUtenzaFissa().getNumero());
-		default:
-			return List.of();
-		}
+        return switch (tipoOperazione) {
+            case TIPO_OPERAZIONE_01 ->
+                    richiestaAttDomFissoRepository.findDomiciliazioniByCodiceFiscale(richiesta.getCf());
+            case TIPO_OPERAZIONE_02 ->
+                    domiciliazioneFissoRepository.findByPrefissoAndNumero(richiesta.getUtenzaFissa().getPrefisso(),
+                            richiesta.getUtenzaFissa().getNumero());
+            default -> List.of();
+        };
 	}
 
 	private DatiRichiesta mapDatiRichiesta(DomiciliazioneFisso domiciliazioneFisso) {
@@ -126,7 +121,7 @@ public class BVRService {
 						LocalDateTime.now(), "BANKING", null, null);			}
 			//altrimenti se tipoOperazione diverso da 01 o 02
 			else if(!(request.getVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso().getTipoOperazione().equals("01") || request.getVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso().getTipoOperazione().equals("02")) ){
-				logger.info("tipoOperazione = " + request.getVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso().getTipoOperazione());
+                logger.info("tipoOperazione = {}", request.getVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso().getTipoOperazione());
 				throw new BVRDFException(HttpStatus.BAD_REQUEST, "SDD06", "Tipo operazione di input non valido",
 						LocalDateTime.now(), "BANKING", null, null);
 			}
