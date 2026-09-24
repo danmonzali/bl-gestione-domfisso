@@ -1,9 +1,9 @@
 package it.tim.bl.gestione.domfisso.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 /**
  * Entity JPA mappata sulla tabella BDATA.RICHIESTE_ATT_DOM_FISSO.
