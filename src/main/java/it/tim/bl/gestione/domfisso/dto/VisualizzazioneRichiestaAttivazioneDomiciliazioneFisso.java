@@ -1,4 +1,4 @@
-package it.tim.bl.gestione.domfisso.bean;
+package it.tim.bl.gestione.domfisso.dto;
 
 import java.time.LocalDateTime;
 public class VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso {
@@ -75,7 +75,7 @@ public class VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso {
 
 		@Override
 		public String toString() {
-			return "RequestBVRD [tipoOperazione=" + tipoOperazione + ", subsys=" + subsys + ", dataOraOp=" + dataOraOp
+			return "VisualizzaRequestDto [tipoOperazione=" + tipoOperazione + ", subsys=" + subsys + ", dataOraOp=" + dataOraOp
 					+ ", cf=" + cf + ", utenzaFissa=" + utenzaFissa + "]";
 		}
 	    

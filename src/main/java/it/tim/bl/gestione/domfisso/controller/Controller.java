@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +22,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import it.tim.bl.gestione.domfisso.bean.RequestBVRD;
-import it.tim.bl.gestione.domfisso.bean.ResponseBVRD;
+import it.tim.bl.gestione.domfisso.dto.VisualizzaRequestDto;
+import it.tim.bl.gestione.domfisso.dto.VisualizzaResponseDto;
 import it.tim.bl.gestione.domfisso.exception.BVRDErrorResponse;
 import it.tim.bl.gestione.domfisso.exception.BVRDFException;
 import it.tim.bl.gestione.domfisso.service.BVRService;
@@ -35,7 +34,6 @@ import it.tim.gup.common.mapper.GupObjectMapper;
 
 @RestController
 @CrossOrigin(origins = "*")
-//@RequestMapping(value = "/bl/visualizza/richiesta/domfisso")
 public class Controller extends GupController {
 	
 	@Autowired
@@ -61,7 +59,7 @@ public class Controller extends GupController {
 	@CrossOrigin(origins = "*")
 	@PostMapping(value = "/bl/visualizza-richiesta-domfisso")
 	//per stampare la request utilizza GupRequestObject
-	public ResponseEntity<ResponseBVRD> blVisualizzaRichiestaDomFisso(@RequestBody(required = true) RequestBVRD request,
+	public ResponseEntity<VisualizzaResponseDto> blVisualizzaRichiestaDomFisso(@RequestBody(required = true) VisualizzaRequestDto request,
 			@RequestHeader(name = "sourceSystem", required = true) String sourceSystem,
 			@RequestHeader(name = "channel", required = true) String channel,
 			@RequestHeader(name = "interactionDate-Date", required = true) String interactionDateDate,
@@ -73,7 +71,7 @@ public class Controller extends GupController {
 			@RequestHeader(name = "resubmitted", required = false) String resubmitted,
 			@RequestHeader(name = "APIGW_requestID", required = false) String APIGWRequestID) throws Exception {
 
-		ResponseEntity<ResponseBVRD> response = null;
+		ResponseEntity<VisualizzaResponseDto> response = null;
 		getLogger().info("blVisualizzaRichiestaDomFisso - BEGIN OPERATION");
 		getLogger().info("blVisualizzaRichiestaDomFisso - body = " + request);
 		getLogger().info("blVisualizzaRichiestaDomFisso - headerParam - sourceSystem = " + sourceSystem + ", channel = " + channel + ", interactionDate-Date = " + interactionDateDate + ", interactionDate-Time = " + interactionDateTime + ", sessionID = " + sessionID + ", businessID = " + businessID + ", transactionID = " + transactionID + ", messageID = " + messageID + ", APIGW_requestID = " + APIGWRequestID + ", resubmitted = " + resubmitted);

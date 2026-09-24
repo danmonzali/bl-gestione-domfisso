@@ -1,8 +1,8 @@
-package it.tim.bl.gestione.domfisso.bean;
+package it.tim.bl.gestione.domfisso.dto;
 
 import java.time.LocalDateTime;
 
-public class ResponseBVRD {
+public class VisualizzaResponseDto {
 
 	    private String tipoOperazione;
 	    private String subsys;

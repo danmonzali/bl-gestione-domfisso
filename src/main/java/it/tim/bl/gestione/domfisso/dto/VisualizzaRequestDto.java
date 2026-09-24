@@ -1,6 +1,6 @@
-package it.tim.bl.gestione.domfisso.bean;
+package it.tim.bl.gestione.domfisso.dto;
 
-public class RequestBVRD {
+public class VisualizzaRequestDto {
 
 	private VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso visualizzazioneRichiestaAttivazioneDomiciliazioneFisso;
 
