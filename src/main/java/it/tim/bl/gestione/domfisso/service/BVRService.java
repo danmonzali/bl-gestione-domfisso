@@ -1,4 +1,4 @@
-package it.tim.bl.visualizza.richiesta.domfisso.service;
+package it.tim.bl.gestione.domfisso.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,13 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import it.tim.bl.visualizza.richiesta.domfisso.bean.RequestBVRD;
-import it.tim.bl.visualizza.richiesta.domfisso.bean.ResponseBVRD;
-import it.tim.bl.visualizza.richiesta.domfisso.bean.ResponseBVRD.DatiRichiesta;
-import it.tim.bl.visualizza.richiesta.domfisso.bean.ResponseBVRD.UtenzaFissa;
-import it.tim.bl.visualizza.richiesta.domfisso.exception.BVRDFException;
-import it.tim.bl.visualizza.richiesta.domfisso.repo.DomiciliazioneFissoRepository;
-import it.tim.bl.visualizzazione.richiesta.domfisso.dto.DomiciliazioneFissoDTO;
+import it.tim.bl.gestione.domfisso.bean.RequestBVRD;
+import it.tim.bl.gestione.domfisso.bean.ResponseBVRD;
+import it.tim.bl.gestione.domfisso.bean.ResponseBVRD.DatiRichiesta;
+import it.tim.bl.gestione.domfisso.bean.ResponseBVRD.UtenzaFissa;
+import it.tim.bl.gestione.domfisso.exception.BVRDFException;
+import it.tim.bl.gestione.domfisso.repo.DomiciliazioneFissoRepository;
+import it.tim.bl.gestione.domfisso.dto.DomiciliazioneFissoDTO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

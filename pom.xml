@@ -9,13 +9,13 @@
 		<version>2.7.0</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>it.tim.bl.visualizza.richiesta.domfisso</groupId>
-	<artifactId>bl-visualizza-richiesta-domfisso</artifactId>
+	<groupId>it.tim.bl.gestione.domfisso</groupId>
+	<artifactId>bl-gestione-domfisso</artifactId>
 	<version>1.0.0</version>
-	<name>bl-visualizza-richiesta-domfisso</name>
-	<description>bl-visualizza-richiesta-domfisso</description>
+	<name>bl-gestione-domfisso</name>
+	<description>bl-gestione-domfisso</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>21</java.version>
 	</properties>
 	<dependencies>
 		<dependency>

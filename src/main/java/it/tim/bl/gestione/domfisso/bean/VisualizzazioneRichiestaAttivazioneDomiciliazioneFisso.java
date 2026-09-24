@@ -1,4 +1,4 @@
-package it.tim.bl.visualizza.richiesta.domfisso.bean;
+package it.tim.bl.gestione.domfisso.bean;
 
 import java.time.LocalDateTime;
 public class VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso {

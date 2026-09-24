@@ -11,7 +11,7 @@
 			additivity="false">
 			<AppenderRef ref="Console" />			
 		</Logger>
-		<Logger name="it.tim.bl.visualizza.richiesta.domfisso" level="${env:LOG_LEVEL_SERVICE}" additivity="false">
+		<Logger name="it.tim.bl.gestione.domfisso" level="${env:LOG_LEVEL_SERVICE}" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>		
 		<Logger name="tim.who.is" level="${env:LOG_LEVEL_SERVICE}" additivity="false">

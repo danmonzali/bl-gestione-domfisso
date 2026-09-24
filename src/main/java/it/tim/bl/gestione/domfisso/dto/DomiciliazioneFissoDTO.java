@@ -1,4 +1,4 @@
-package it.tim.bl.visualizzazione.richiesta.domfisso.dto;
+package it.tim.bl.gestione.domfisso.dto;
 
 public class DomiciliazioneFissoDTO {
     private String stato;

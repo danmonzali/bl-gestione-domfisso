@@ -1,4 +1,4 @@
-package it.tim.bl.visualizza.richiesta.domfisso.util;
+package it.tim.bl.gestione.domfisso.util;
 
 import java.sql.Timestamp;
 import java.text.ParseException;

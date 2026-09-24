@@ -1,4 +1,4 @@
-package it.tim.bl.visualizza.richiesta.domfisso.controller;
+package it.tim.bl.gestione.domfisso.controller;
 
 import java.time.LocalDateTime;
 
@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
-import it.tim.bl.visualizza.richiesta.domfisso.exception.BVRDErrorResponse;
-import it.tim.bl.visualizza.richiesta.domfisso.exception.BVRDFException;
+import it.tim.bl.gestione.domfisso.exception.BVRDErrorResponse;
+import it.tim.bl.gestione.domfisso.exception.BVRDFException;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
 
 	private static final Logger logger = LogManager.getLogger(RestExceptionHandler.class);
 
-	private static final String logPrefix = "bl-visualizza-richiesta-domfisso - ";
+	private static final String logPrefix = "bl-gestione-domfisso - ";
 
 	@ExceptionHandler(BVRDFException.class)
 	public final ResponseEntity<BVRDErrorResponse> handleBRPException(BVRDFException e) {
