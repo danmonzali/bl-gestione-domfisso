@@ -35,7 +35,7 @@ import it.tim.gup.common.mapper.GupObjectMapper;
 
 @RestController
 @CrossOrigin(origins = "*")
-//@RequestMapping(value = "/bl/visualizza/richiesta/domfisso")
+@RequestMapping(value = "/bl/domfisso")
 public class Controller extends GupController {
 	
 	@Autowired
@@ -59,7 +59,7 @@ public class Controller extends GupController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(array = @ArraySchema(schema = @Schema(implementation = BVRDErrorResponse.class))) }) })
 	@CrossOrigin(origins = "*")
-	@PostMapping(value = "/bl/visualizza-richiesta-domfisso")
+	@PostMapping(value = "/bl/visualizza-richiesta")
 	//per stampare la request utilizza GupRequestObject
 	public ResponseEntity<ResponseBVRD> blVisualizzaRichiestaDomFisso(@RequestBody(required = true) RequestBVRD request,
 			@RequestHeader(name = "sourceSystem", required = true) String sourceSystem,
