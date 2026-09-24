@@ -16,6 +16,7 @@ import it.tim.bl.gestione.domfisso.dto.VisualizzaRequestDto;
 import it.tim.bl.gestione.domfisso.dto.VisualizzaResponseDto;
 import it.tim.bl.gestione.domfisso.dto.VisualizzaResponseDto.DatiRichiesta;
 import it.tim.bl.gestione.domfisso.dto.VisualizzaResponseDto.UtenzaFissa;
+import it.tim.bl.gestione.domfisso.dto.VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso;
 import it.tim.bl.gestione.domfisso.entity.DomiciliazioneFisso;
 import it.tim.bl.gestione.domfisso.exception.BVRDFException;
 import it.tim.bl.gestione.domfisso.repo.DomiciliazioneFissoRepository;
@@ -30,6 +31,8 @@ public class BVRService {
 	private final static String FORMAT_ORA = "HH:mm:ss";
 	private static final String TIPO_OPERAZIONE_01 = "01";
 	private static final String TIPO_OPERAZIONE_02 = "02";
+	private static final String ESITO_OK = "01";
+	private static final String ESITO_NESSUN_DATO = "03";
 	private static final String LOG = "blVisualizzaRichiestaDomfisso - ";
 	private static final DateTimeFormatter FORMAT_DATA_INSERIMENTO = DateTimeFormatter
 			.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
@@ -44,61 +47,69 @@ public class BVRService {
 
 	public ResponseEntity<VisualizzaResponseDto> visualizzaRichiestaDomFisso(VisualizzaRequestDto request)
 			throws BVRDFException {
-		VisualizzaResponseDto responseBVRD = new VisualizzaResponseDto();
+		VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso richiesta = request
+				.getVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso();
+		String tipoOperazione = richiesta.getTipoOperazione();
 
-		String tipoOperazione = request.getVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso().getTipoOperazione();
-		ResponseEntity<VisualizzaResponseDto> response = null;
 		try {
-			List<DomiciliazioneFisso> resultQuery;
-			if (tipoOperazione.equals(TIPO_OPERAZIONE_01)) {
-				resultQuery = richiestaAttDomFissoRepository.findDomiciliazioniByCodiceFiscale(
-						request.getVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso().getCf());
-			} else if (tipoOperazione.equals(TIPO_OPERAZIONE_02)) {
-				resultQuery = domiciliazioneFissoRepository.findByPrefissoAndNumero(
-						request.getVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso().getUtenzaFissa().getPrefisso(),
-						request.getVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso().getUtenzaFissa().getNumero());
-			} else {
-				resultQuery = List.of();
-			}
+			List<DomiciliazioneFisso> resultQuery = cercaDomiciliazioni(richiesta, tipoOperazione);
 
-			response = ResponseEntity.ok(responseBVRD);
-			response.getBody().setTipoOperazione(tipoOperazione);
-			response.getBody().setEsito((request.getVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso().getCf() != null) ? "01" : "02");
-			response.getBody().setSubsys("NBIP");
-			response.getBody().setDataOraOp(LocalDateTime.now().toString());
+			VisualizzaResponseDto responseBody = new VisualizzaResponseDto();
+			responseBody.setTipoOperazione(tipoOperazione);
+			responseBody.setSubsys("NBIP");
+			responseBody.setDataOraOp(LocalDateTime.now().toString());
 			//01 : richiesta OK
 			//02: errore nei controlli formali
 			//03: nessun dato trovato
 			//04: errore generico
 
-			if (resultQuery.size() > 0) {
-				response.getBody().setEsito((resultQuery.size() == 0) ? "03" : "01");
-				DomiciliazioneFisso domiciliazioneFisso = resultQuery.get(0);
-				LocalDateTime dataInserimento = domiciliazioneFisso.getDataInserimento();
-
-				response.getBody().setDatiRichiesta(new DatiRichiesta());
-				response.getBody().getDatiRichiesta().setbID(domiciliazioneFisso.getBid());
-				response.getBody().getDatiRichiesta()
-						.setDataRichiesta(dataInserimento != null ? dataInserimento.format(FORMAT_DATA_INSERIMENTO) : null);
-				response.getBody().getDatiRichiesta()
-						.setStato(domiciliazioneFisso.getStato() != null ? String.valueOf(domiciliazioneFisso.getStato()) : null);
-				response.getBody().getDatiRichiesta().setUtenzaFissa(new UtenzaFissa());
-				response.getBody().getDatiRichiesta().getUtenzaFissa().setNumero(domiciliazioneFisso.getDatiLineaFisso().getNumero());
-				response.getBody().getDatiRichiesta().getUtenzaFissa().setPrefisso(domiciliazioneFisso.getDatiLineaFisso().getPrefisso());
+			if (!resultQuery.isEmpty()) {
+				responseBody.setEsito(ESITO_OK);
+				responseBody.setDatiRichiesta(mapDatiRichiesta(resultQuery.get(0)));
+			} else {
+				responseBody.setEsito(ESITO_NESSUN_DATO);
 			}
+
+			return ResponseEntity.ok(responseBody);
 		} catch (DataAccessException e) {
 			logger.error(LOG + "Errore nella ricerca del dato: ", e);
-			logger.info(LOG + "Uscita dal workflow");
 			throw new BVRDFException(HttpStatus.INTERNAL_SERVER_ERROR, "SDD04",
 					"Errore esecuzione operazione sul database di GUP", LocalDateTime.now(), "BANKING", null, null);
 		} catch (Exception e) {
 			logger.error(LOG + "Errore nella ricerca del dato: ", e);
-			logger.info(LOG + "Uscita dal workflow");
 			throw new BVRDFException(HttpStatus.INTERNAL_SERVER_ERROR, "SDD03", "Errore generico non è stato possibile portare a termine l’esecuzione dell’operazione",
 					LocalDateTime.now(), "BANKING", null, null);
 		}
+	}
 
-		return response;
+	private List<DomiciliazioneFisso> cercaDomiciliazioni(
+			VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso richiesta, String tipoOperazione) {
+		switch (tipoOperazione) {
+		case TIPO_OPERAZIONE_01:
+			return richiestaAttDomFissoRepository.findDomiciliazioniByCodiceFiscale(richiesta.getCf());
+		case TIPO_OPERAZIONE_02:
+			return domiciliazioneFissoRepository.findByPrefissoAndNumero(richiesta.getUtenzaFissa().getPrefisso(),
+					richiesta.getUtenzaFissa().getNumero());
+		default:
+			return List.of();
+		}
+	}
+
+	private DatiRichiesta mapDatiRichiesta(DomiciliazioneFisso domiciliazioneFisso) {
+		DatiRichiesta dati = new DatiRichiesta();
+		dati.setbID(domiciliazioneFisso.getBid());
+		dati.setDataRichiesta(formatDataInserimento(domiciliazioneFisso.getDataInserimento()));
+		dati.setStato(domiciliazioneFisso.getStato() != null ? String.valueOf(domiciliazioneFisso.getStato()) : null);
+
+		UtenzaFissa utenzaFissa = new UtenzaFissa();
+		utenzaFissa.setNumero(domiciliazioneFisso.getDatiLineaFisso().getNumero());
+		utenzaFissa.setPrefisso(domiciliazioneFisso.getDatiLineaFisso().getPrefisso());
+		dati.setUtenzaFissa(utenzaFissa);
+		return dati;
+	}
+
+	private static String formatDataInserimento(LocalDateTime dataInserimento) {
+		return dataInserimento != null ? dataInserimento.format(FORMAT_DATA_INSERIMENTO) : null;
 	}
 
 
