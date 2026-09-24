@@ -1,8 +1,8 @@
 pipeline:
   flavour: mavenjavaalp-8
   project_manifest_git_ssh_url: 'git@scm.code.telecomitalia.it:gup/gup.meta.git'
-  delivery_git_ssh_url: 'git@scm.code.telecomitalia.it:gup/bl-visualizza-richiesta-domfisso/delivery.git'
-  service_name: bl-visualizza-richiesta-domfisso
+  delivery_git_ssh_url: 'git@scm.code.telecomitalia.it:gup/bl-gestione-domfisso/delivery.git'
+  service_name: bl-gestione-domfisso
 build:
   push:
     mvn: |
