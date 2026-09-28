@@ -23,7 +23,7 @@ import java.util.Date;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping(value = "/bl/domfisso")
+@RequestMapping(value = "/bl")
 public class Controller extends GupController {
 	
 	@Autowired
@@ -47,7 +47,7 @@ public class Controller extends GupController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))) }) })
 	@CrossOrigin(origins = "*")
-	@PostMapping(value = "/visualizza-richiesta")
+	@PostMapping(value = "/visualizza-richiesta-domfisso")
 	public ResponseEntity<VisualizzaResponseDto> blVisualizzaRichiestaDomFisso(@RequestBody(required = true) VisualizzaRequestDto request,
 			@RequestHeader(name = "sourceSystem", required = true) String sourceSystem,
 			@RequestHeader(name = "channel", required = true) String channel,
