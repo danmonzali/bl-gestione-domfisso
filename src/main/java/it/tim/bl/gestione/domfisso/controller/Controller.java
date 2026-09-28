@@ -1,21 +1,5 @@
 package it.tim.bl.gestione.domfisso.controller;
 
-import java.util.Date;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,13 +8,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.tim.bl.gestione.domfisso.dto.VisualizzaRequestDto;
 import it.tim.bl.gestione.domfisso.dto.VisualizzaResponseDto;
-import it.tim.bl.gestione.domfisso.exception.BVRDErrorResponse;
-import it.tim.bl.gestione.domfisso.exception.BVRDFException;
+import it.tim.bl.gestione.domfisso.exception.ErrorResponse;
 import it.tim.bl.gestione.domfisso.service.BVRService;
-import it.tim.gup.common.bean.GupRequestObject;
 import it.tim.gup.common.controller.GupController;
-import it.tim.gup.common.controller.RestHeader;
 import it.tim.gup.common.mapper.GupObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -48,18 +37,17 @@ public class Controller extends GupController {
 	@Operation(summary = "POST BL Visualizza richiesta dom fisso", description = "verifica lo stato attuale di una domiciliazione bancaria su mandato generico SDD della bolletta del telefono fisso di un cliente TIM")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Ok"),
 			@ApiResponse(responseCode = "404", description = "Not Found", content = {
-					@Content(array = @ArraySchema(schema = @Schema(implementation = BVRDErrorResponse.class))) }),
+					@Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))) }),
 			@ApiResponse(responseCode = "400", description = "Bad request", content = {
-					@Content(array = @ArraySchema(schema = @Schema(implementation = BVRDErrorResponse.class))) }),
+					@Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))) }),
 			@ApiResponse(responseCode = "504", description = "GateWay TimeOut", content = {
-					@Content(array = @ArraySchema(schema = @Schema(implementation = BVRDErrorResponse.class))) }),
+					@Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))) }),
 			@ApiResponse(responseCode = "503", description = "Service Unavailable", content = {
-					@Content(array = @ArraySchema(schema = @Schema(implementation = BVRDErrorResponse.class))) }),
+					@Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))) }),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
-					@Content(array = @ArraySchema(schema = @Schema(implementation = BVRDErrorResponse.class))) }) })
+					@Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))) }) })
 	@CrossOrigin(origins = "*")
 	@PostMapping(value = "/visualizza-richiesta")
-	//per stampare la request utilizza GupRequestObject
 	public ResponseEntity<VisualizzaResponseDto> blVisualizzaRichiestaDomFisso(@RequestBody(required = true) VisualizzaRequestDto request,
 			@RequestHeader(name = "sourceSystem", required = true) String sourceSystem,
 			@RequestHeader(name = "channel", required = true) String channel,
@@ -73,40 +61,26 @@ public class Controller extends GupController {
 			@RequestHeader(name = "APIGW_requestID", required = false) String APIGWRequestID) throws Exception {
 
 		ResponseEntity<VisualizzaResponseDto> response = null;
+
+		ThreadContext.put("gupEventType", "blVisualizzaRichiestaDomFisso");
 		getLogger().info("blVisualizzaRichiestaDomFisso - BEGIN OPERATION");
-		getLogger().info("blVisualizzaRichiestaDomFisso - body = " + request);
-		getLogger().info("blVisualizzaRichiestaDomFisso - headerParam - sourceSystem = " + sourceSystem + ", channel = " + channel + ", interactionDate-Date = " + interactionDateDate + ", interactionDate-Time = " + interactionDateTime + ", sessionID = " + sessionID + ", businessID = " + businessID + ", transactionID = " + transactionID + ", messageID = " + messageID + ", APIGW_requestID = " + APIGWRequestID + ", resubmitted = " + resubmitted);
+        getLogger().info("blVisualizzaRichiestaDomFisso - body = {}", request);
+        getLogger().info("blVisualizzaRichiestaDomFisso - headerParam - sourceSystem = {}, channel = {}, interactionDate-Date = {}, interactionDate-Time = {}, sessionID = {}, businessID = {}, transactionID = {}, messageID = {}, APIGW_requestID = {}, resubmitted = {}", sourceSystem, channel, interactionDateDate, interactionDateTime, sessionID, businessID, transactionID, messageID, APIGWRequestID, resubmitted);
 		Date initDate = new Date();
-		
+
 		try {
-			ThreadContext.put("gupEventType", "blVisualizzaRichiestaDomFisso");
-			service.validaRequest(request);
-			 response = service.visualizzaRichiestaDomFisso(request);
-			getLogger().info("blVisualizzaRichiestaDomFisso - response = " + response);
-			ThreadContext.put("gupEventReturnCode", "OK");
-			String exeTime = String.valueOf((new Date().getTime() - initDate.getTime()));
-			ThreadContext.put("gupExeTime", exeTime);
-			getLogger().info("blVisualizzaRichiestaDomFisso - END OPERATION");
-			ThreadContext.remove("gupExeTime");
-			ThreadContext.remove("gupEventReturnCode");
-		}catch (BVRDFException e) {
-			String exeTime = String.valueOf((new Date().getTime() - initDate.getTime()));
-			ThreadContext.put("gupExeTime", exeTime);
-			e.setErrorSourceSystem("BANKINGDATA");
-			throw e;
-		} catch (Exception e) {
-			ThreadContext.put("gupEventReturnCode", "KO");
-			String exeTime = String.valueOf((new Date().getTime() - initDate.getTime()));
-			ThreadContext.put("gupExeTime", exeTime);
-			throw e;
+			response = service.visualizzaRichiestaDomFisso(request);
+
+			return response;
 		} finally {
-		}
-		return response;
+			String exeTime = String.valueOf((new Date().getTime() - initDate.getTime()));
+			ThreadContext.put("gupExeTime", exeTime);
+			getLogger().info("blVisualizzaRichiestaDomFisso  - END OPERATION");
+        }
 	}
 
 	@Override
 	protected Logger getLogger() {
 		return logger;
 	}
-
 }
