@@ -22,7 +22,7 @@ public interface RichiestaAttDomFissoRepository extends JpaRepository<RichiestaA
 			+ "JOIN FETCH d.datiLineaFisso l "
 			+ "WHERE r.idDomiciliazione = d.idDomiciliazione "
 			+ "AND r.cfIntMandato = :cf AND r.esito = '000' "
-			+ "ORDER BY d.dataInserimento DESC")
+			+ "ORDER BY d.dataInserimento DESC NULLS LAST")
 	List<DomiciliazioneFisso> findDomiciliazioniByCodiceFiscale(@Param("cf") String cf);
 
 }

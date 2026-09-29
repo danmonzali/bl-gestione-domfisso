@@ -7,10 +7,10 @@ servers:
     description: Generated server url
 paths:
   /bl/visualizza-richiesta-domfisso:
-    post:
+    get:
       tags:
         - controller
-      summary: POST BL Visualizza richiesta dom fisso
+      summary: GET BL Visualizza richiesta dom fisso
       description: verifica lo stato attuale di una domiciliazione bancaria su mandato generico SDD della bolletta del telefono fisso di un cliente TIM
       operationId: blVisualizzaRichiestaDomFisso
       parameters:
@@ -29,11 +29,15 @@ paths:
           required: true
           schema:
             type: string
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+            example: '2026-09-28'
         - name: interactionDate-Time
           in: header
           required: true
           schema:
             type: string
+            pattern: '^\d{2}:\d{2}:\d{2}\.\d{3}$'
+            example: '17:10:00.123'
         - name: sessionID
           in: header
           required: true
@@ -51,7 +55,7 @@ paths:
             type: string
         - name: messageID
           in: header
-          required: false
+          required: true
           schema:
             type: string
         - name: resubmitted
@@ -65,6 +69,7 @@ paths:
           schema:
             type: string
       requestBody:
+        description: Body JSON inviato con metodo GET (SIF §2.2, §3.1)
         content:
           application/json:
             schema:
@@ -72,51 +77,38 @@ paths:
         required: true
       responses:
         '200':
-          description: Ok
+          description: 'Ok: esito 01 (domiciliazione trovata), 02 (controlli formali falliti), 03 (nessuna domiciliazione)'
+          headers:
+            apigwRequestId:
+              description: Valorizzato con l'header APIGW_requestID della request, se presente
+              schema:
+                type: string
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ResponseBVRD'
         '400':
-          description: Bad request
-          content:
-            '*/*':
+          description: Bad request (code 103 - Errore nei dati di input)
+          headers:
+            apigwRequestId:
+              description: Valorizzato con l'header APIGW_requestID della request, se presente
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BVRDErrorResponse'
-        '404':
-          description: Not Found
+                type: string
           content:
-            '*/*':
+            application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BVRDErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
-          description: Internal Server Error
-          content:
-            '*/*':
+          description: Internal Server Error (code 674 - Errore generico su GUP)
+          headers:
+            apigwRequestId:
+              description: Valorizzato con l'header APIGW_requestID della request, se presente
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BVRDErrorResponse'
-        '503':
-          description: Service Unavailable
+                type: string
           content:
-            '*/*':
+            application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BVRDErrorResponse'
-        '504':
-          description: GateWay TimeOut
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BVRDErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
   /probe:
     get:
       tags:
@@ -141,9 +133,82 @@ components:
   schemas:
     RequestBVRD:
       type: object
+      required:
+        - visualizzazioneRichiestaAttivazioneDomiciliazioneFisso
       properties:
         visualizzazioneRichiestaAttivazioneDomiciliazioneFisso:
           $ref: '#/components/schemas/VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso'
+    UtenzaFissaRequest:
+      type: object
+      description: Obbligatoria se tipoOperazione = 02
+      required:
+        - prefisso
+        - numero
+      properties:
+        prefisso:
+          type: string
+          maxLength: 4
+        numero:
+          type: string
+          maxLength: 8
+    VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso:
+      type: object
+      required:
+        - tipoOperazione
+        - subsys
+        - dataOraOp
+      properties:
+        tipoOperazione:
+          type: string
+          maxLength: 2
+          enum:
+            - '01'
+            - '02'
+          description: 01 = ricerca per codice fiscale, 02 = ricerca per utenza fissa
+        subsys:
+          type: string
+          maxLength: 10
+          enum:
+            - DBSSDealer
+            - DBSSHOPAPP
+            - DBSSCC
+            - DBSSWEBCdC
+            - DBSSWEB
+            - MYTIMAPP
+            - MYTIMWEB
+        dataOraOp:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}$'
+          example: '2026-09-28T17:10:00.123'
+        cf:
+          type: string
+          maxLength: 16
+          description: Obbligatorio se tipoOperazione = 01
+        utenzaFissa:
+          $ref: '#/components/schemas/UtenzaFissaRequest'
+    ErrorResponse:
+      required:
+        - code
+        - message
+        - timestamp
+        - errorSourceSystem
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+            - '103'
+            - '674'
+        message:
+          type: string
+          example: Errore nei dati di input
+        timestamp:
+          type: string
+          description: Data e ora dell'errore (Europe/Rome, con offset)
+          example: '2026-09-28T17:10:00.123+02:00'
+        errorSourceSystem:
+          type: string
+          example: TIM-CO-GUP
     UtenzaFissa:
       type: object
       properties:
@@ -151,62 +216,42 @@ components:
           type: string
         numero:
           type: string
-    VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso:
-      type: object
-      properties:
-        tipoOperazione:
-          type: string
-        subsys:
-          type: string
-        dataOraOp:
-          type: string
-          format: date-time
-        cf:
-          type: string
-        utenzaFissa:
-          $ref: '#/components/schemas/UtenzaFissa'
-    BVRDErrorResponse:
-      required:
-        - code
-        - errorSourceSystem
-        - message
-        - timestamp
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
-        errorSourceSystem:
-          type: string
-        moreInfo:
-          type: string
-        userMessage:
-          type: string
     DatiRichiesta:
       type: object
+      description: Presente solo con esito 01 (oggetto singolo, domiciliazione più recente)
       properties:
         stato:
           type: string
         dataRichiesta:
           type: string
-        getbID:
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}$'
+          example: '2022-05-02T13:27:55.965'
+        bid:
           type: string
         utenzaFissa:
           $ref: '#/components/schemas/UtenzaFissa'
     ResponseBVRD:
       type: object
+      required:
+        - subsys
+        - dataOraRisposta
+        - esito
       properties:
         tipoOperazione:
           type: string
         subsys:
           type: string
-        dataOraOp:
+          example: NBIP
+        dataOraRisposta:
           type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}$'
+          example: '2026-09-28T17:10:00.123'
         esito:
           type: string
+          enum:
+            - '01'
+            - '02'
+            - '03'
+          description: 01 = domiciliazione trovata, 02 = controlli formali falliti, 03 = nessuna domiciliazione
         datiRichiesta:
           $ref: '#/components/schemas/DatiRichiesta'

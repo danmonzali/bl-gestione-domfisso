@@ -1,51 +1,26 @@
 package it.tim.bl.gestione.domfisso.exception;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+/**
+ * Schema documentale (OpenAPI) del body di errore restituito da {@link GlobalExceptionHandler}
+ * e costruito da {@link ExceptionJsonUtil}. Non viene usata a runtime.
+ */
 @Data
-@JsonInclude(Include.NON_NULL)
-public class ErrorResponse implements Serializable {
-	@Serial
-    private static final long serialVersionUID = -7944769880035493881L;
+@Schema(name = "ErrorResponse", description = "Tracciato output in caso negativo")
+public class ErrorResponse {
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING)
-	@JsonProperty(value = "code", required = true)
+	@Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Codice di errore applicativo", allowableValues = { "103", "674" }, example = "103")
 	private String code;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING)
-	@JsonProperty(value = "message", required = true)
+	@Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Descrizione dell'errore", example = "Errore nei dati di input")
 	private String message;
 
-	@JsonProperty(value = "timestamp", required = true)
-	@JsonFormat(shape = JsonFormat.Shape.OBJECT, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
-	private LocalDateTime timestamp = LocalDateTime.now(ZoneId.of("UTC"));
+	@Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Data e ora dell'errore (Europe/Rome, con offset)", example = "2026-09-28T17:10:00.123+02:00")
+	private String timestamp;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING)
-	@JsonProperty(value = "errorSourceSystem", required = true)
-	private String errorSourceSystem = "Banking Adapter";
-
-	@JsonFormat(shape = JsonFormat.Shape.STRING)
-	@JsonProperty(value = "moreInfo", required = false)
-	private String moreInfo;
-
-	@JsonFormat(shape = JsonFormat.Shape.STRING)
-	@JsonProperty(value = "userMessage", required = false)
-	private String userMessage;
-
-//	@Override
-//	public String toString() {
-//		return "BVSPErrorResponse [code=" + code + ", message=" + message + ", timestamp=" + timestamp
-//				+ ", errorSourceSystem=" + errorSourceSystem + ", moreInfo=" + moreInfo + ", userMessage=" + userMessage
-//				+ "]";
-//	}
+	@Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Sistema che ha generato l'errore", example = "TIM-CO-GUP")
+	private String errorSourceSystem;
 
 }

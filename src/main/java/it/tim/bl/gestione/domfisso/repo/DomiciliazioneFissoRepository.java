@@ -13,7 +13,7 @@ public interface DomiciliazioneFissoRepository extends JpaRepository<Domiciliazi
 	@Query("SELECT d FROM DomiciliazioneFisso d "
 			+ "JOIN FETCH d.datiLineaFisso l "
 			+ "WHERE l.prefisso = :prefisso AND l.numero = :numero "
-			+ "ORDER BY d.dataInserimento DESC")
+			+ "ORDER BY d.dataInserimento DESC NULLS LAST")
 	List<DomiciliazioneFisso> findByPrefissoAndNumero(@Param("prefisso") String prefisso,
 			@Param("numero") String numero);
 

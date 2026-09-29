@@ -7,4 +7,10 @@ public class VisualizzaRequestDto {
 
 	private VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso visualizzazioneRichiestaAttivazioneDomiciliazioneFisso;
 
+	@Override
+	public String toString() {
+		return "VisualizzaRequestDto [visualizzazioneRichiestaAttivazioneDomiciliazioneFisso="
+				+ visualizzazioneRichiestaAttivazioneDomiciliazioneFisso + "]";
+	}
+
 }
