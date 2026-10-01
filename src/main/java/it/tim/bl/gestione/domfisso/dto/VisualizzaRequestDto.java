@@ -1,19 +1,16 @@
 package it.tim.bl.gestione.domfisso.dto;
 
+import lombok.Getter;
+
+@Getter
 public class VisualizzaRequestDto {
 
 	private VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso visualizzazioneRichiestaAttivazioneDomiciliazioneFisso;
 
-	public VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso getVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso() {
-		return visualizzazioneRichiestaAttivazioneDomiciliazioneFisso;
+	@Override
+	public String toString() {
+		return "VisualizzaRequestDto [visualizzazioneRichiestaAttivazioneDomiciliazioneFisso="
+				+ visualizzazioneRichiestaAttivazioneDomiciliazioneFisso + "]";
 	}
 
-	public void setVisualizzazioneRichiestaAttivazioneDomiciliazioneFisso(
-			VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso visualizzazioneRichiestaAttivazioneDomiciliazioneFisso) {
-		this.visualizzazioneRichiestaAttivazioneDomiciliazioneFisso = visualizzazioneRichiestaAttivazioneDomiciliazioneFisso;
-	}
-
-
-	
-	
 }
