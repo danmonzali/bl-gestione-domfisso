@@ -5,7 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableAsync
-@SpringBootApplication(scanBasePackages = { "it.tim.gup.common","it.tim.bl.gestione.domfisso.*","tim.who.is" })
+@SpringBootApplication(scanBasePackages = { "it.tim.gup.common", "it.tim.bl.gestione.domfisso", "tim.who.is",
+		"it.tim.enc" })
 public class Application {
 
 	public static void main(String[] args) {
