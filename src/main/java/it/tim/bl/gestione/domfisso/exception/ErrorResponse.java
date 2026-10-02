@@ -11,7 +11,7 @@ import lombok.Data;
 @Schema(name = "ErrorResponse", description = "Tracciato output in caso negativo")
 public class ErrorResponse {
 
-	@Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Codice di errore applicativo", allowableValues = { "103", "674" }, example = "103")
+	@Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Codice di errore applicativo", allowableValues = { "100", "101", "103", "674" }, example = "103")
 	private String code;
 
 	@Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Descrizione dell'errore", example = "Errore nei dati di input")

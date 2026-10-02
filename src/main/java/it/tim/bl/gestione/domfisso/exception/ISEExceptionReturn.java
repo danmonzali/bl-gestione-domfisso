@@ -28,6 +28,10 @@ public class ISEExceptionReturn extends RuntimeException {
 		return new ISEExceptionReturn(CODICE_674,CODICE_674_MSG);
 	}
 	
+	public String getCode() {
+		return code;
+	}
+
 	@Override
 	public String toString() {
 		return ExceptionJsonUtil.toJson(code, message);
