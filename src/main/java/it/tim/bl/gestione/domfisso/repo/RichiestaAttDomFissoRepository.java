@@ -13,10 +13,8 @@ public interface RichiestaAttDomFissoRepository extends JpaRepository<RichiestaA
 
 	/**
 	 * Join applicativo tra RICHIESTE_ATT_DOM_FISSO e DOMICILIAZIONI_SU_FISSO su
-	 * ID_DOMICILIAZIONE: non e' una relazione JPA mappata perche' sullo schema
-	 * reale quella colonna non e' PK ne' ha un indice univoco su
-	 * DOMICILIAZIONI_SU_FISSO (si veda {@link DomiciliazioneFisso}), quindi si
-	 * esprime come theta-join JPQL, fedele alla query SQL originale.
+	 * ID_DOMICILIAZIONE (PK di DOMICILIAZIONI_SU_FISSO): espresso come theta-join
+	 * JPQL perche' non esiste una relazione JPA mappata verso la richiesta.
 	 */
 	@Query("SELECT d FROM RichiestaAttDomFisso r, DomiciliazioneFisso d "
 			+ "JOIN FETCH d.datiLineaFisso l "
