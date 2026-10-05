@@ -17,7 +17,7 @@ public interface RichiestaAttDomFissoRepository extends JpaRepository<RichiestaA
 	 * JPQL perche' non esiste una relazione JPA mappata verso la richiesta.
 	 */
 	@Query("SELECT d FROM RichiestaAttDomFisso r, DomiciliazioneFisso d "
-			+ "JOIN FETCH d.datiLineaFisso l "
+			+ "LEFT JOIN FETCH d.datiLineaFisso l "
 			+ "WHERE r.idDomiciliazione = d.idDomiciliazione "
 			+ "AND r.cfIntMandato = :cf AND r.esito = '000' "
 			+ "ORDER BY d.dataInserimento DESC NULLS LAST")
