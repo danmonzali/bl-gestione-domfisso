@@ -1,4 +1,4 @@
-package it.tim.bl.gestione.domfisso.service;
+package it.tim.bl.gestione.domfisso.validator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

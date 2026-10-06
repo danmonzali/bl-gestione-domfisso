@@ -1,4 +1,4 @@
-package it.tim.bl.gestione.domfisso.service;
+package it.tim.bl.gestione.domfisso.dto;
 
 import it.tim.bl.gestione.domfisso.dto.AttivazioneMandatoRequestDto;
 import it.tim.bl.gestione.domfisso.dto.AttivazioneRequestDto.RichiestaAttivazioneDomiciliazioneFisso;

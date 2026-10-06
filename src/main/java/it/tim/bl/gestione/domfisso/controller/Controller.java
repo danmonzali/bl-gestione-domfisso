@@ -14,7 +14,7 @@ import it.tim.bl.gestione.domfisso.exception.BRExceptionReturn;
 import it.tim.bl.gestione.domfisso.exception.ErrorResponse;
 import it.tim.bl.gestione.domfisso.exception.ISEExceptionReturn;
 import it.tim.bl.gestione.domfisso.service.AttivazioneDomFissoService;
-import it.tim.bl.gestione.domfisso.service.BVRService;
+import it.tim.bl.gestione.domfisso.service.VisualizzaRichiestaDomFissoService;
 import it.tim.gup.common.controller.GupController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +42,7 @@ public class Controller extends GupController {
 			.withResolverStyle(ResolverStyle.STRICT);
 
 	@Autowired
-	private BVRService service;
+	private VisualizzaRichiestaDomFissoService service;
 
 	@Autowired
 	private AttivazioneDomFissoService attivazioneService;

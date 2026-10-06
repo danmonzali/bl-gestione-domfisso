@@ -1,14 +1,11 @@
 package it.tim.bl.gestione.domfisso.service;
 
-import it.tim.bl.gestione.domfisso.dto.VisualizzaRequestDto;
-import it.tim.bl.gestione.domfisso.dto.VisualizzaResponseDto;
-import it.tim.bl.gestione.domfisso.dto.VisualizzaResponseDto.DatiRichiesta;
-import it.tim.bl.gestione.domfisso.dto.VisualizzaResponseDto.UtenzaFissa;
-import it.tim.bl.gestione.domfisso.dto.VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso;
-import it.tim.bl.gestione.domfisso.entity.DomiciliazioneFisso;
-import it.tim.bl.gestione.domfisso.exception.ISEExceptionReturn;
-import it.tim.bl.gestione.domfisso.repo.DomiciliazioneFissoRepository;
-import it.tim.bl.gestione.domfisso.repo.RichiestaAttDomFissoRepository;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,16 +13,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Set;
+import it.tim.bl.gestione.domfisso.dto.VisualizzaRequestDto;
+import it.tim.bl.gestione.domfisso.dto.VisualizzaResponseDto.DatiRichiesta;
+import it.tim.bl.gestione.domfisso.dto.VisualizzaResponseDto.UtenzaFissa;
+import it.tim.bl.gestione.domfisso.dto.VisualizzaResponseDto;
+import it.tim.bl.gestione.domfisso.dto.VisualizzazioneRichiestaAttivazioneDomiciliazioneFisso;
+import it.tim.bl.gestione.domfisso.entity.DomiciliazioneFisso;
+import it.tim.bl.gestione.domfisso.exception.ISEExceptionReturn;
+import it.tim.bl.gestione.domfisso.repo.DomiciliazioneFissoRepository;
+import it.tim.bl.gestione.domfisso.repo.RichiestaAttDomFissoRepository;
 
 @Service
-public class BVRService {
+public class VisualizzaRichiestaDomFissoService {
 
-	private static final Logger logger = LogManager.getLogger(BVRService.class);
+	private static final Logger logger = LogManager.getLogger(VisualizzaRichiestaDomFissoService.class);
 	private static final String TIPO_OPERAZIONE_01 = "01";
 	private static final String TIPO_OPERAZIONE_02 = "02";
 	private static final String ESITO_OK = "01";
