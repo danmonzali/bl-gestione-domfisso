@@ -1,24 +1,8 @@
 package it.tim.bl.gestione.domfisso.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.stereotype.Service;
-
-import it.tim.bl.gestione.domfisso.dto.AttivazioneMandatoRequestDto;
+import it.tim.bl.gestione.domfisso.dto.*;
 import it.tim.bl.gestione.domfisso.dto.AttivazioneRequestDto.DatiIntestatario;
 import it.tim.bl.gestione.domfisso.dto.AttivazioneRequestDto.RichiestaAttivazioneDomiciliazioneFisso;
-import it.tim.bl.gestione.domfisso.dto.AttivazioneRequestDto;
-import it.tim.bl.gestione.domfisso.dto.AttivazioneResponseDto;
-import it.tim.bl.gestione.domfisso.dto.ContestoRichiesta;
-import it.tim.bl.gestione.domfisso.dto.DatiRegistrazione;
 import it.tim.bl.gestione.domfisso.entity.DatiLineaFisso;
 import it.tim.bl.gestione.domfisso.entity.ProfiloPspSddMandato;
 import it.tim.bl.gestione.domfisso.entity.RichiestaAttDomFisso;
@@ -30,6 +14,17 @@ import it.tim.bl.gestione.domfisso.repo.ProfiloPspSddMandatoRepository;
 import it.tim.bl.gestione.domfisso.util.MaskingUtil;
 import it.tim.bl.gestione.domfisso.validator.AttivazioneDomFissoValidator;
 import it.tim.enc.pojo.DecryptPojo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Orchestratore NON transazionale del servizio bl-attivazione-dom-fisso.

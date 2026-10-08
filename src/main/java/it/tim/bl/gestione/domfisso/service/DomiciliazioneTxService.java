@@ -1,15 +1,5 @@
 package it.tim.bl.gestione.domfisso.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import it.tim.bl.gestione.domfisso.client.AttivazioneMandatoClient;
 import it.tim.bl.gestione.domfisso.dto.AttivazioneRequestDto.DatiIntestatario;
 import it.tim.bl.gestione.domfisso.dto.AttivazioneRequestDto.RichiestaAttivazioneDomiciliazioneFisso;
@@ -23,6 +13,15 @@ import it.tim.bl.gestione.domfisso.repo.DatiLineaFissoRepository;
 import it.tim.bl.gestione.domfisso.repo.DomiciliazioneFissoRepository;
 import it.tim.bl.gestione.domfisso.repo.ProfiloPspSddMandatoRepository;
 import it.tim.bl.gestione.domfisso.util.MaskingUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Transazione di business unica, nell'ordine della SF §3.5.2. Include l'aggiornamento finale di
